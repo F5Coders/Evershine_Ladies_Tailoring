@@ -382,34 +382,31 @@
 
     
     <!-- Items Table -->
-    <div class="box">
+<div class="box">
   <table id="itemsTable" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; margin-top: 20px;">
-  <thead style="background-color: #e3f2fd; color: #003366;">
-    <tr>
-  <th style="border: 1px solid #ccc; padding: 8px;">Item</th>
-  <th style="border: 1px solid #ccc; padding: 8px;">HSN</th>
-  <th style="border: 1px solid #ccc; padding: 8px;">Qty</th>
-  <th style="border: 1px solid #ccc; padding: 8px;">Rate (₹)</th>
-  <th style="border: 1px solid #ccc; padding: 8px;">Amount (₹)</th>
-  <th style="border: 1px solid #ccc; padding: 8px;">Total (₹)</th>
-  <th style="border: 1px solid #ccc; padding: 8px;">Action</th>
-</tr>
-
-  </thead>
-  <tbody>
-    <tr>
-      <td contenteditable style="border: 1px solid #ccc;" data-placeholder="Enter Product Name"></td>
-      <td style="pointer-events: none; background-color: #f0f0f0; border: 1px solid #ccc; text-align: center;">3926</td>
-      <td contenteditable style="border: 1px solid #ccc;" data-placeholder="Enter Quantity"></td>
-      <td contenteditable style="border: 1px solid #ccc;" data-placeholder="Enter Rate"></td>
-      <td class="amount" contenteditable="false" style="border: 1px solid #ccc; text-align: right;">0.00</td>
-      <td class="total" contenteditable="false" style="border: 1px solid #ccc; text-align: right;">0.00</td>
-      <td style="border: 1px solid #ccc; text-align: center;">
-        <button class="delete-btn" onclick="deleteRow(this)" title="Delete Row" style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <thead style="background-color: #e3f2fd; color: #003366;">
+      <tr>
+        <th style="border: 1px solid #ccc; padding: 8px;">Item</th>
+        <th style="border: 1px solid #ccc; padding: 8px;">Qty</th>
+        <th style="border: 1px solid #ccc; padding: 8px;">Rate (₹)</th>
+        <th style="border: 1px solid #ccc; padding: 8px;">Amount (₹)</th>
+        <th style="border: 1px solid #ccc; padding: 8px;">Total (₹)</th>
+        <th style="border: 1px solid #ccc; padding: 8px;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td contenteditable style="border: 1px solid #ccc;" data-placeholder="Enter Product Name"></td>
+        <td contenteditable style="border: 1px solid #ccc;" data-placeholder="Enter Quantity"></td>
+        <td contenteditable style="border: 1px solid #ccc;" data-placeholder="Enter Rate"></td>
+        <td class="amount" contenteditable="false" style="border: 1px solid #ccc; text-align: right;">0.00</td>
+        <td class="total" contenteditable="false" style="border: 1px solid #ccc; text-align: right;">0.00</td>
+        <td style="border: 1px solid #ccc; text-align: center;">
+          <button class="delete-btn" onclick="deleteRow(this)" title="Delete Row" style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <button class="add-btn" onclick="addRow()">+ Add Item</button>
 </div>
@@ -547,15 +544,15 @@
   <!-- Items -->
   <table class="items" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
   <thead style="background-color: #f2f2f2;">
-    <tr style="border: 1px solid #ccc;">
-      <th>Item</th>
-      <th>HSN</th>
-      <th>Qty</th>
-      <th>Rate (₹)</th>
-      <th>Amount (₹)</th>
-      <th>Total (₹)</th>
-    </tr>
-  </thead>
+  <tr style="border: 1px solid #ccc;">
+    <th>Item</th>
+    <th>Qty</th>
+    <th>Rate (₹)</th>
+    <th>Amount (₹)</th>
+    <th>Total (₹)</th>
+  </tr>
+</thead>
+
   <tbody id="pr_itemsBody" style="text-align: center;">
     <!-- Rows inserted dynamically -->
   </tbody>
@@ -663,20 +660,22 @@
 
 <script>
   // Add new item row
-  function addRow() {
+ function addRow() {
   const tbody = document.querySelector('#itemsTable tbody');
   const row = document.createElement('tr');
   row.innerHTML = `
     <td contenteditable data-placeholder="Enter Product Name"></td>
-    <td style="pointer-events: none; background-color: #f0f0f0;">3926</td> <!-- Fixed HSN -->
     <td contenteditable data-placeholder="Enter Quantity"></td>
     <td contenteditable data-placeholder="Enter Rate"></td>
     <td class="amount" contenteditable="false"></td>
     <td class="total" contenteditable="false"></td>
-    <td><button class="delete-btn" onclick="deleteRow(this)" title="Delete Row">X</button></td>
+    <td>
+      <button class="delete-btn" onclick="deleteRow(this)" title="Delete Row" style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
+    </td>
   `;
   tbody.appendChild(row);
 }
+
 
 
 
@@ -696,10 +695,9 @@ function calculateTotals() {
 
   const rows = document.querySelectorAll('#itemsTable tbody tr');
   rows.forEach(row => {
-    const qty = parseFloat(row.cells[2].innerText) || 0;
-    const rate = parseFloat(row.cells[3].innerText) || 0;
+    const qty = parseFloat(row.cells[1].innerText) || 0;
+    const rate = parseFloat(row.cells[2].innerText) || 0;
 
-    // Validate input
     if (!isValidNumber(qty) || !isValidNumber(rate)) {
       if (row.querySelector('.amount')) row.querySelector('.amount').innerText = '';
       if (row.querySelector('.total')) row.querySelector('.total').innerText = '';
@@ -707,9 +705,8 @@ function calculateTotals() {
     }
 
     const amount = qty * rate;
-    const total = amount; // No GST
+    const total = amount; // no GST
 
-    // Update row
     if (row.querySelector('.amount')) row.querySelector('.amount').innerText = amount.toFixed(2);
     if (row.querySelector('.total')) row.querySelector('.total').innerText = total.toFixed(2);
 
@@ -717,13 +714,11 @@ function calculateTotals() {
     grandTotal += total;
   });
 
-  // Update invoice totals
   document.getElementById('subTotal').value = subTotal.toFixed(2);
   document.getElementById('grandTotal').value = grandTotal.toFixed(2);
-
-  // Update total in words
   document.getElementById('totalInWords').innerText = convertNumberToWords(grandTotal);
 }
+
 
 
 
@@ -786,13 +781,13 @@ function calculateTotals() {
     rows.forEach(row => {
       const cells = row.querySelectorAll('td');
       invoiceData.items.push({
-        item: cells[0]?.innerText.trim() || '',
-        hsn: cells[1]?.innerText.trim() || '',
-        qty: cells[2]?.innerText.trim() || '',
-        rate: cells[3]?.innerText.trim() || '',
-        amount: cells[4]?.innerText.trim() || '',
-        total: cells[5]?.innerText.trim() || ''
-      });
+  item: cells[0]?.innerText.trim() || '',
+  qty: cells[1]?.innerText.trim() || '',
+  rate: cells[2]?.innerText.trim() || '',
+  amount: cells[3]?.innerText.trim() || '',
+  total: cells[4]?.innerText.trim() || ''
+});
+
     });
 
     localStorage.setItem('savedInvoice', JSON.stringify(invoiceData));
@@ -894,7 +889,7 @@ function generateInvoiceEmail() {
   const itemName = firstRow.cells[0].innerText.trim() || 'N/A';
   const qty = firstRow.cells[2].innerText.trim() || 'N/A';
   const rate = firstRow.cells[3].innerText.trim() || 'N/A';
-  const total = firstRow.cells[7].innerText.trim() || 'N/A';
+const total = firstRow.cells[4].innerText.trim() || 'N/A';
 
   const message = `
 Dear ${customerName},
@@ -961,7 +956,7 @@ if (!body) return;
 body.innerHTML = '';
 
 document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
-  const cells = Array.from(row.cells).slice(0, -1).map(cell => cell.innerText.trim()); // 👈 skip last column
+const cells = Array.from(row.cells).slice(0, -1).map(cell => cell.innerText.trim());
   if (!cells[0]) return; // skip empty rows
   const tr = document.createElement('tr');
   tr.innerHTML = cells.map(cell => `<td>${cell || ''}</td>`).join('');
